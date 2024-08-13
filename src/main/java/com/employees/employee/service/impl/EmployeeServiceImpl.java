@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   public EmployeResponseSize getAllEmployees(String fieldName, Direction direction) {
     List<Employee> employees = employeeRepository.findAll(Sort.by(direction, fieldName));
     List<EmployeeDto> employeeDtos = employees.stream()
-        .map(employee -> EmployeeMapperDto.mapToEmployeeDto(employee)).collect(Collectors.toList());
+        .map(EmployeeMapperDto::mapToEmployeeDto).collect(Collectors.toList());
     return new EmployeResponseSize(employeeDtos.size(), employeeDtos);
   }
 
@@ -76,6 +76,8 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public CustomResponsePagination<EmployeeDto> getEmployeesWithPagination(Pageable pageable) {
     Page<Employee> employeesPage = employeeRepository.findAll(pageable);
+    /*List<EmployeeDto> employeeDtos = employeesPage.map(employee -> EmployeeMapperDto.mapToEmployeeDto(employee))
+        .getContent();*/
     List<EmployeeDto> employeeDtos = employeesPage.map(EmployeeMapperDto::mapToEmployeeDto)
         .getContent();
     return new CustomResponsePagination<>(employeeDtos,
